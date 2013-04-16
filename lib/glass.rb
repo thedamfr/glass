@@ -7,6 +7,10 @@ require 'google/api_client'
 module Glass
 
   MIRROR= "mirror"
+  INSERT= "INSERT"
+  UPDATE= "UPDATE"
+  DELETE= "DELETE"
+
 
   class Mirror
     class << self
