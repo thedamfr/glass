@@ -4,9 +4,14 @@ module Glass
 
   class TimelineItem
 
-    # The type of resource. This is always mirror#timelineItem.
-    #
-    attr_reader :kind
+
+    class << self
+
+      # The type of resource. This is always mirror#timelineItem.
+      #
+      attr_reader :kind
+
+    end
 
     # The ID of the timeline item. This is unique within a user's timeline.
     #
