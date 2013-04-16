@@ -1,6 +1,8 @@
 # Glass
 
-TODO: Write a gem description
+This Gem is meant to help you quickly building application for Google Glass thanks to Ruby.
+
+This is totally a beginning. Nothing is done.
 
 ## Installation
 
