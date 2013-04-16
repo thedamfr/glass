@@ -1,5 +1,5 @@
 module Glass
-  TIMELINEITEM="timelineItem"
+  TIMELINE_ITEM="timelineItem"
 
 
   class TimelineItem
@@ -137,7 +137,7 @@ module Glass
     #
     attr_accessor :recipients
 
-    @@kind= MIRROR+"#"+"timelineItem"
+    @@kind= MIRROR+"#"+TIMELINE_ITEM
     @id
     @selfLink
     @created
