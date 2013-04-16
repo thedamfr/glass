@@ -21,18 +21,23 @@ module Glass
     # Add other requested scopes.
     ]
 
+    @@config = Config.new()
+
+    attr_accessor :client
+    @client
+
     def self.hello_world
       "Hello World!"
     end
 
     # Returns the current Redis connection. If none has been created, will
     # create a new one.
-    def redis
-      config.redis
+    def self.redis
+      @@config.redis
     end
 
-    def redis_id
-      config.redis_id
+    def self.redis_id
+      @@config.redis_id
     end
 
     ##
@@ -43,7 +48,7 @@ module Glass
     # @return [Signet::OAuth2::Client]
     #  Stored OAuth 2.0 credentials if found, nil otherwise.
     #
-    def get_stored_credentials(user_id)
+    def self.get_stored_credentials(user_id)
       hash = Redis.get(user_id)
       client = Google::APIClient.new
       client.authorization.dup
@@ -58,7 +63,7 @@ module Glass
     # @param [Signet::OAuth2::Client] credentials
     #   OAuth 2.0 credentials to store.
     #
-    def store_credentials(user_id, credentials)
+    def self.store_credentials(user_id, credentials)
       hash = Hash.new()
       hash[:access_token] = credentials.access_token
       hash[:refresh_token] = credentials.refresh_token
@@ -76,7 +81,7 @@ module Glass
     # @return [Signet::OAuth2::Client]
     #  OAuth 2.0 credentials.
     #
-    def exchange_code(authorization_code)
+    def self.exchange_code(authorization_code)
       client = Google::APIClient.new
       client.authorization.client_id = @@client_id
       client.authorization.client_secret = @@client_secret
@@ -99,7 +104,7 @@ module Glass
     # @return [Google::APIClient::Schema::Oauth2::V2::Userinfo]
     #   User's information.
     #
-    def get_user_info(credentials)
+    def self.get_user_info(credentials)
       client = Google::APIClient.new
       client.authorization = credentials
       oauth2 = client.discovered_api('oauth2', 'v2')
@@ -126,7 +131,7 @@ module Glass
     # @return [String]
     #  Authorization URL to redirect the user to.
     #
-    def get_authorization_url(user_id, state)
+    def self.get_authorization_url(user_id, state)
       client = Google::APIClient.new
       client.authorization.client_id = @@client_id
       client.authorization.redirect_uri = @@redirect_uri
@@ -159,7 +164,7 @@ module Glass
     # @return [Signet::OAuth2::Client]
     #  OAuth 2.0 credentials containing an access and refresh token.
     #
-    def get_credentials(authorization_code, state)
+    def self.get_credentials(authorization_code, state)
       user_id = ''
       begin
         credentials = exchange_code(authorization_code)
@@ -188,6 +193,21 @@ module Glass
       raise NoRefreshTokenError.new(authorization_url)
     end
 
+
+    ##
+    # Build a Mirror client instance.
+    #
+    # @param [Signet::OAuth2::Client] credentials
+    #   OAuth 2.0 credentials.
+    # @return [Google::APIClient]
+    #   Client instance
+    def self.build_client(credentials)
+      m = Mirror.new()
+      m.client = Google::APIClient.new
+      m.client.authorization = credentials
+      m.client = m.client.discovered_api('mirror', 'v1')
+      m
+    end
 
   end
 
