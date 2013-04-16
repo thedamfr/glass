@@ -44,7 +44,10 @@ module Glass
     #  Stored OAuth 2.0 credentials if found, nil otherwise.
     #
     def get_stored_credentials(user_id)
-      Redis.get(user_id)        #Todo : Make credential deserialisation
+      hash = Redis.get(user_id)
+      client = Google::APIClient.new
+      client.authorization.dup
+      client.update_token!(hash)
     end
 
     ##
@@ -56,7 +59,13 @@ module Glass
     #   OAuth 2.0 credentials to store.
     #
     def store_credentials(user_id, credentials)
-      Redis.set(user_id, credentials)  #Todo : Make credential serialisation
+      hash = Hash.new()
+      hash[:access_token] = credentials.access_token
+      hash[:refresh_token] = credentials.refresh_token
+      hash[:expires_in] = credentials.expires_in
+      hash[:issued_at] = credentials.issued_at
+
+      Redis.set(user_id, hash)
     end
 
     ##
