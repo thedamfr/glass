@@ -243,7 +243,7 @@ module Glass
 
       REPLY="REPLY"
       REPLY_ALL="REPLY_ALL"
-      DELETE="DEETE"
+      DELETE="DELETE"
       SHARE="SHARE"
       READ_ALOUD="READ_ALOUD"
       VOICE_CALL="VOICE_CALL"
