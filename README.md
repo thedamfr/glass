@@ -4,6 +4,10 @@ This Gem is meant to help you quickly building application for Google Glass than
 
 This is totally a beginning. Nothing is done.
 
+This gem is using google/api-client
+
+This gem is using Redis to store clients credentials
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -20,7 +24,18 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Setup Credential
+
+```ruby
+require 'glass'
+Glass::Mirror.client_id = ENV['GLASS_CLIENT_ID']
+Glass::Mirror.cient_secret = ENV['GLASS_CLIENT_SECRET']
+Glass::Mirror.redirect_uri = ENV['GLASS_REDIRECT_URI']
+Glass::Mirror.scopes ++ [# Add other requested scopes]
+    # Default is 'https://www.googleapis.com/auth/drive.file',
+    #            'https://www.googleapis.com/auth/userinfo.profile',
+
+```
 
 ## Contributing
 
