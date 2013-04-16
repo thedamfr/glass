@@ -1,6 +1,6 @@
 module Glass
   class Config
-    attr_reader :redis
+
     # Accepts:
     #   1. A 'hostname:port' String
     #   2. A 'hostname:port:db' String (to select the Redis db)
@@ -32,6 +32,12 @@ module Glass
                  when Redis
                    Redis::Namespace.new(:glass, :redis => server)
                end
+    end
+
+    def redis
+      return @redis if @redis
+      self.redis = Redis.respond_to?(:connect) ? Redis.connect : "localhost:6379"
+      self.redis
     end
 
     def redis_id
