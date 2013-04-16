@@ -6,7 +6,7 @@ require 'google/api_client'
 
 module Glass
 
-
+  MIRROR= "mirror"
 
   class Mirror
     class << self
