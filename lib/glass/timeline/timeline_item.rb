@@ -1,7 +1,8 @@
 module Glass
   TIMELINE_ITEM="timelineItem"
 
-
+  # Each item in the user's timeline is represented as a TimelineItem JSON structure, described below.
+  #
   class TimelineItem
 
 
@@ -169,7 +170,8 @@ module Glass
     @pinScore
     @recipients=[]
 
-
+    # Represents media content, such as a photo, that can be attached to a timeline item.
+    #
     class Attachment
 
       # The ID of the attachment.

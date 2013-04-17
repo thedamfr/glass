@@ -1,6 +1,8 @@
 module Glass
   CONTACT="contact"
 
+  # A person or group that can be used as a creator or a contact.
+  #
   class Contact
 
     class << self

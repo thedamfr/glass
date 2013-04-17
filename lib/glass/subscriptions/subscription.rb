@@ -1,6 +1,8 @@
 module Glass
   SUBSCRIPTION="subscription"
 
+  # A subscription to events on a collection.
+  #
   class Subscription
     class << self
       # The type of resource. This is always mirror#subscription.
