@@ -138,7 +138,7 @@ module Glass
     #
     attr_accessor :pinScore
 
-    # A list of users or groups that this item has been shared with.
+    # A list of contacts or groups that this item has been shared with.
     #
     attr_accessor :recipients
 
@@ -198,7 +198,7 @@ module Glass
     class Notification
 
       # Describes how important the notification is. Allowed values are:
-      #   DEFAULT - Notifications of default importance. A chime will be played to alert users.
+      #   DEFAULT - Notifications of default importance. A chime will be played to alert contacts.
       attr_accessor :level
 
       # The time at which the notification should be delivered.
