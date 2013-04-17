@@ -3,6 +3,7 @@ require 'redis'
 require 'redis-namespace'
 require 'glass/config'
 require 'google/api_client'
+require 'httparty'
 
 module Glass
 
@@ -13,6 +14,8 @@ module Glass
 
 
   class Mirror
+
+
     class << self
       attr_accessor :scopes, :client_id, :redirect_uri, :client_secret
     end
@@ -24,6 +27,8 @@ module Glass
         'https://www.googleapis.com/auth/userinfo.profile',
     # Add other requested scopes.
     ]
+
+
 
     @@config = Config.new()
 

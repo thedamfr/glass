@@ -12,6 +12,59 @@ module Glass
       #
       attr_reader :kind
 
+
+      def get(client, id)
+        client.exexute(
+            :api_method => client.timeline.get,
+            :parameters => {:id => id}
+        )
+      end
+
+      # Retrieves a list of timeline items for the authenticated user.
+      # @param [string] bundleId
+      #   If true, tombstone records for deleted items will be returned.
+      # @param [boolean] includeDeleted
+      #   If true, tombstone records for deleted items will be returned.
+      # @param [integer] maxResults
+      #   The maximum number of items to include in the response, used for paging.
+      # @param [string] orderBy
+      #   Controls the order in which timeline items are returned.
+      #   Acceptable values are:
+      #     "displayTime": Results will be ordered by displayTime (default). This is the same ordering as is used in the timeline on the device.
+      #     "writeTime": Results will be ordered by the time at which they were last written to the data store.
+      # @param [string] pageToken
+      #   Token for the page of results to return.
+      # @param [boolean] pinnedOnly
+      #   If true, only pinned items will be returned.
+      # @param [string] sourceItemId
+      #   If provided, only items with the given sourceItemId will be returned.
+      #
+      def list(client, bundleId=nil, includeDeleted=false, maxResults=nil, orderBy=nil, pageToken=nil, pinnedOnly=false, sourceItemId=false)
+        result=[]
+        pag_token = nil
+        begin
+          parameters = {}
+          parameters['pageToken'] = page_token unless page_token.to_s == ''
+          api_result = client.execute(
+              :api_method => mirror.timeline.list,
+              :parameters => parameters)
+          if api_result.success?
+            timeline_items = api_result.data
+            if timeline_items.items.empty?
+              page_token = nil
+            else
+              result << timeline_items.items
+              page_token = timeline_items.next_page_token
+            end
+          else
+            puts "An error occurred: #{result.data['error']['message']}"
+            page_token = nil
+          end
+        end while page_token.to_s != ''
+        result
+      end
+
+
     end
 
     # The ID of the timeline item. This is unique within a user's timeline.
@@ -28,7 +81,7 @@ module Glass
 
     # The time at which this item was last modified, formatted according to RFC 3339.
     #
-    attr_accessor  :updated
+    attr_accessor :updated
 
     # The time that should be displayed when this item is viewed in the timeline,
     # formatted according to RFC 3339. This user's timeline is sorted chronologically on display time,

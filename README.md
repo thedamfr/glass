@@ -4,9 +4,11 @@ This Gem is meant to help you quickly building application for Google Glass than
 
 This is totally a beginning. Nothing is done.
 
-This gem is using google/api-client
+This gem is using google/api-client.
 
-This gem is using Redis to store clients credentials
+If you think google/api-client is b***s*** this gem is what you need.
+
+This gem is using Redis to store clients credentials.
 
 ## Installation
 
