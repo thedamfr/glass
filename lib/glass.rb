@@ -103,10 +103,10 @@ module Glass
     #
     def self.exchange_code(authorization_code)
       client = Google::APIClient.new
-      client.authorization.client_id = @@client_id
-      client.authorization.client_secret = @@client_secret
+      client.authorization.client_id = client_id
+      client.authorization.client_secret = client_secret
       client.authorization.code = authorization_code
-      client.authorization.redirect_uri = @@redirect_uri
+      client.authorization.redirect_uri = redirect_uri
 
       begin
         client.authorization.fetch_access_token!
@@ -153,9 +153,9 @@ module Glass
     #
     def self.get_authorization_url(user_id, state)
       client = Google::APIClient.new
-      client.authorization.client_id = @@client_id
-      client.authorization.redirect_uri = @@redirect_uri
-      client.authorization.scope = @@scopes
+      client.authorization.client_id = client_id
+      client.authorization.redirect_uri = redirect_uri
+      client.authorization.scope = scopes
 
       return client.authorization.authorization_uri(
           :options => {
