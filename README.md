@@ -33,7 +33,7 @@ require 'glass'
 Glass::Mirror.client_id = ENV['GLASS_CLIENT_ID']
 Glass::Mirror.client_secret = ENV['GLASS_CLIENT_SECRET']
 Glass::Mirror.redirect_uri = ENV['GLASS_REDIRECT_URI']
-Glass::Mirror.scopes += [# Add other requested scopes]
+Glass::Mirror.scopes = [ Add requested scopes]
     # Default is 'https://www.googleapis.com/auth/drive.file',
     #            'https://www.googleapis.com/auth/userinfo.profile',
 ```
@@ -44,6 +44,16 @@ And do the OAuth trick
 ```ruby
 ok_glass = Glass::Mirror.build_with_code(authorization_code)
 ```
+
+For now, other features and helpers are under development.
+
+But as you are a Glassware Explorer you can explore yourself. Access the google/api-client Client this way :
+```ruby
+ok_glass.client   # Get the discovered Google::API on wich you can make request
+```
+
+Have fun ! And please, show me any use. Just send me a tweet : @TheDamFr
+
 
 ### Token Persistence
 
