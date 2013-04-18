@@ -50,7 +50,7 @@ ok_glass = Glass::Mirror.build_with_code(authorization_code)
 As in OAuth2.0, Google API issue a Refresh_Token the first time you Authorize the client, so you can get new token later.
 You need to store this token. Out of the box Glass's Gem use Redis to do it.
 
-By default, Glass use local redis store (localhost:6379)
+By default, Glass use local redis store (localhost:6379).
 
 You can specify the Redis store this way :
 
@@ -62,7 +62,7 @@ Glass::Mirror.redis = ENV["REDISTOGO_URL"]
 
 ### Bypassing Redis
 
-You can bypass Redis. I don't want to know why, but you can
+You can bypass Redis. I don't want to know why you would, but you can do it easily.
 
 Just do :
 ```ruby
