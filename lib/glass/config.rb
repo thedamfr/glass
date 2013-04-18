@@ -1,6 +1,10 @@
 module Glass
   class Config
 
+
+    attr_accessor :no_redis
+
+    ##
     # Accepts:
     #   1. A 'hostname:port' String
     #   2. A 'hostname:port:db' String (to select the Redis db)
@@ -50,6 +54,9 @@ module Glass
         redis.client.id
       end
     end
+
+    @@no_redis
+
 
   end
 end

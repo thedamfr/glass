@@ -4,6 +4,10 @@ require 'redis-namespace'
 require 'glass/config'
 require 'google/api_client'
 require 'httparty'
+require 'glass/contacts/contact'
+require 'glass/locations/location'
+require 'glass/subscriptions/subscription'
+require 'glass/timeline/timeline_item'
 
 module Glass
 
@@ -29,7 +33,6 @@ module Glass
     ]
 
 
-
     @@config = Config.new()
 
     attr_accessor :client
@@ -49,6 +52,10 @@ module Glass
       @@config.redis_id
     end
 
+    def self.no_redis= val
+      @@config.no_redis=val
+    end
+
     ##
     # Retrieved stored credentials for the provided user ID.
     #
@@ -58,10 +65,12 @@ module Glass
     #  Stored OAuth 2.0 credentials if found, nil otherwise.
     #
     def self.get_stored_credentials(user_id)
-      hash = Redis.get(user_id)
-      client = Google::APIClient.new
-      client.authorization.dup
-      client.update_token!(hash)
+      unless @@config.no_redis
+        hash = Redis.get(user_id)
+        client = Google::APIClient.new
+        client.authorization.dup
+        client.update_token!(hash)
+      end
     end
 
     ##
@@ -73,13 +82,15 @@ module Glass
     #   OAuth 2.0 credentials to store.
     #
     def self.store_credentials(user_id, credentials)
-      hash = Hash.new()
-      hash[:access_token] = credentials.access_token
-      hash[:refresh_token] = credentials.refresh_token
-      hash[:expires_in] = credentials.expires_in
-      hash[:issued_at] = credentials.issued_at
+      unless @@config.no_redis
+        hash = Hash.new()
+        hash[:access_token] = credentials.access_token
+        hash[:refresh_token] = credentials.refresh_token
+        hash[:expires_in] = credentials.expires_in
+        hash[:issued_at] = credentials.issued_at
 
-      Redis.set(user_id, hash)
+        Redis.set(user_id, hash)
+      end
     end
 
     ##
@@ -198,6 +209,7 @@ module Glass
       rescue NoUserIdError
         print 'No user ID could be retrieved.'
       end
+
       authorization_url = get_authorization_url(user_id, state)
       raise NoRefreshTokenError.new(authorization_url)
     end
@@ -220,9 +232,9 @@ module Glass
 
   end
 
-  ##
-  # Error raised when an error occurred while retrieving credentials.
-  #
+##
+# Error raised when an error occurred while retrieving credentials.
+#
   class GetCredentialsError < StandardError
     ##
     # Initialize a NoRefreshTokenError instance.
@@ -244,25 +256,23 @@ module Glass
     end
   end
 
-  ##
-  # Error raised when a code exchange has failed.
-  #
+##
+# Error raised when a code exchange has failed.
+#
   class CodeExchangeError < GetCredentialsError
   end
 
-  ##
-  # Error raised when no refresh token has been found.
-  #
+##
+# Error raised when no refresh token has been found.
+#
   class NoRefreshTokenError < GetCredentialsError
   end
 
-  ##
-  # Error raised when no user ID could be retrieved.
-  #
+##
+# Error raised when no user ID could be retrieved.
+#
   class NoUserIdError < StandardError
   end
-
-
 
 
 end
