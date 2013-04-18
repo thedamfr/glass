@@ -184,7 +184,7 @@ module Glass
     # @return [Signet::OAuth2::Client]
     #  OAuth 2.0 credentials containing an access and refresh token.
     #
-    def self.get_credentials(authorization_code, state)
+    def self.get_credentials(authorization_code, state="OAuth Failed")
       user_id = ''
       begin
         credentials = exchange_code(authorization_code)
@@ -228,6 +228,10 @@ module Glass
       m.client.authorization = credentials
       m.client = m.client.discovered_api('mirror', 'v1')
       m
+    end
+
+    def self.build_with_code(authorization_code)
+      return build_client(get_credentials(authorization_code))
     end
 
   end
