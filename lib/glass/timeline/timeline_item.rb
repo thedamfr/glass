@@ -20,6 +20,9 @@ module Glass
         )
       end
 
+      DISPLAY_TIME="displayTime"
+      WRITE_TIME="writeTime"
+
       # Retrieves a list of timeline items for the authenticated user.
       # @param [string] bundleId
       #   If true, tombstone records for deleted items will be returned.
