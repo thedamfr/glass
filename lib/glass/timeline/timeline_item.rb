@@ -39,28 +39,22 @@ module Glass
       # @param [string] sourceItemId
       #   If provided, only items with the given sourceItemId will be returned.
       #
-      def list(client, bundleId=nil, includeDeleted=false, maxResults=nil, orderBy=nil, pageToken=nil, pinnedOnly=false, sourceItemId=false)
+      def list(client, params={})
         result=[]
-        pag_token = nil
-        begin
-          parameters = {}
-          parameters['pageToken'] = page_token unless page_token.to_s == ''
-          api_result = client.execute(
-              :api_method => mirror.timeline.list,
-              :parameters => parameters)
-          if api_result.success?
-            timeline_items = api_result.data
-            if timeline_items.items.empty?
-              page_token = nil
-            else
-              result << timeline_items.items
-              page_token = timeline_items.next_page_token
-            end
-          else
-            puts "An error occurred: #{result.data['error']['message']}"
-            page_token = nil
+        parameters = params
+        api_result = client.execute(
+            :api_method => mirror.timeline.list,
+            :parameters => parameters)
+        if api_result.success?
+          data = api_result.data
+          unless data.items.empty?
+            result << data.items
+            parameters[:pageToken]= data.next_page_token
+            result << list(client, parameters)
           end
-        end while page_token.to_s != ''
+        else
+          puts "An error occurred: #{result.data['error']['message']}"
+        end
         result
       end
 
