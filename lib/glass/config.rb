@@ -13,6 +13,7 @@ module Glass
     #   5. An instance of `Redis`, `Redis::Client`, `Redis::DistRedis`,
     #      or `Redis::Namespace`.
     def redis=(server)
+      if @@no_redis then return nil end
       return if server == "" or server.nil?
 
       @redis = case server
@@ -39,12 +40,14 @@ module Glass
     end
 
     def redis
+      if @@no_redis then return nil end
       return @redis if @redis
       self.redis = Redis.respond_to?(:connect) ? Redis.connect : "localhost:6379"
       self.redis
     end
 
     def redis_id
+      if @@no_redis then return nil end
       # support 1.x versions of redis-rb
       if redis.respond_to?(:server)
         redis.server
