@@ -1,3 +1,5 @@
+require 'json'
+
 module Glass
   TIMELINE_ITEM="timelineItem"
 
@@ -5,6 +7,9 @@ module Glass
   #
   class TimelineItem
 
+    def initialize(client)
+      @client = client
+    end
 
     class << self
 
@@ -61,8 +66,13 @@ module Glass
         result
       end
 
-
     end
+
+    ##
+    # The Client
+    #
+    attr_reader :client
+    @client
 
     # The ID of the timeline item. This is unique within a user's timeline.
     #
@@ -226,24 +236,28 @@ module Glass
 
       # The ID of the attachment.
       #
-      attr_accessor :id
+      attr_reader :id
+      @id
 
       # The MIME type of the attachment.
+      # (supported content types are 'image/*', 'video/*' and 'audio/*').
       #
       attr_accessor :contentType
+      @contentType
+
+      TYPE_IMAGE='image/*'
+      TYPE_VIDEO='video/*'
+      TYPE_AUDIO='audio/*'
 
       # The URL for the content.
       #
       attr_accessor :contentUrl
+      @contentUrl
 
       # Indicates that the contentUrl is not available because the attachment content is still being processed.
       # If the caller wishes to retrieve the content, it should try again later.
       #
-      attr_accessor :isProcessingContent
-
-      @id
-      @contentType
-      @contentUrl
+      attr_reader :isProcessingContent
       @isProcessingContent
     end
 
@@ -333,6 +347,53 @@ module Glass
         CONFIRMED="CONFIRMED"
       end
     end
+
+
+    ##
+    # Insert a new Timeline Item in the user's glass.
+    #
+    # @param [Google::APIClient::API] client
+    #   Authorized client instance.
+    # @return Array[Google::APIClient::Schema::Mirror::V1::TimelineItem]
+    #   Timeline item instance if successful, nil otherwise.
+    def insert!(mirror=@client)
+      timeline_item = self
+      result = []
+      if file_upload?
+        for file in file_to_upload
+          media = Google::APIClient::UploadIO.new(file.contentUrl, file.content_type)
+          result << client.execute!(
+              :api_method => mirror.timeline.insert,
+              :body_object => timeline_item,
+              :media => media,
+              :parameters => {
+                  :uploadType => 'multipart',
+                  :alt => 'json'})
+        end
+      else
+        result << client.execute(
+            :api_method => mirror.timeline.insert,
+            :body_object => timeline_item)
+      end
+      return result.data
+    end
+
+    def file_upload?
+      flag=false
+      @attachments.each { |attachment|
+        flag = true unless attachment.id
+      }
+      return flag
+    end
+
+    def file_to_upload
+      file_to_upload=[]
+      @attachments.each { |attachment|
+        file_to_upload << attachment unless attachment.id
+      }
+      file_to_upload
+    end
+
 
   end
 
