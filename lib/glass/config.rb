@@ -58,7 +58,7 @@ module Glass
       end
     end
 
-    @@no_redis
+    @no_redis
 
 
   end
