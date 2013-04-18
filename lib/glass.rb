@@ -3,15 +3,11 @@ require 'redis'
 require 'redis-namespace'
 require 'glass/config'
 require 'google/api_client'
-require 'httparty'
-require 'glass/contacts/contact'
-require 'glass/locations/location'
-require 'glass/subscriptions/subscription'
-require 'glass/timeline/timeline_item'
 
 module Glass
 
   MIRROR= "mirror"
+
   INSERT= "INSERT"
   UPDATE= "UPDATE"
   DELETE= "DELETE"
@@ -22,15 +18,15 @@ module Glass
 
     class << self
       attr_accessor :scopes, :client_id, :redirect_uri, :client_secret
+      @client_id
+      @client_secret
+      @redirect_uri
+      @scopes = [
+          'https://www.googleapis.com/auth/drive.file',
+          'https://www.googleapis.com/auth/userinfo.profile',
+      # Add other requested scopes.
+      ]
     end
-    @@client_id
-    @@client_secret
-    @@redirect_uri
-    @@scopes = [
-        'https://www.googleapis.com/auth/drive.file',
-        'https://www.googleapis.com/auth/userinfo.profile',
-    # Add other requested scopes.
-    ]
 
 
     @@config = Config.new()
@@ -46,6 +42,10 @@ module Glass
     # create a new one.
     def self.redis
       @@config.redis
+    end
+
+    def self.redis= val
+      @@config.redis = val
     end
 
     def self.redis_id
@@ -280,3 +280,8 @@ module Glass
 
 
 end
+
+require 'glass/contacts/contact'
+require 'glass/locations/location'
+require 'glass/subscriptions/subscription'
+require 'glass/timeline/timeline_item'

@@ -1,3 +1,4 @@
+
 module Glass
   CONTACT="contact"
 
@@ -11,7 +12,7 @@ module Glass
       attr_accessor :kind
     end
 
-    @@kind=MIRROR+"#"+CONTACT
+    @@kind = MIRROR+"#"+CONTACT
 
     # The ID of the application that created this contact.
     # This is populated by the API

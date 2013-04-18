@@ -223,7 +223,7 @@ module Glass
     @title
     @html
     @bundleId
-    @htmlPages[]
+    @htmlPages=[]
     @sourceItemId
     @canonicalUrl
     @isBundleCover

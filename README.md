@@ -50,6 +50,8 @@ ok_glass = Glass::Mirror.build_with_code(authorization_code)
 As in OAuth2.0, Google API issue a Refresh_Token the first time you Authorize the client, so you can get new token later.
 You need to store this token. Out of the box Glass's Gem use Redis to do it.
 
+Glass use a namespace on your redis. So don't bother about this (even if you can specify one too).
+
 By default, Glass use local redis store (localhost:6379).
 
 You can specify the Redis store this way :
