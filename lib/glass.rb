@@ -3,6 +3,7 @@ require 'redis'
 require 'redis-namespace'
 require 'glass/config'
 require 'google/api_client'
+require 'json'
 
 module Glass
 

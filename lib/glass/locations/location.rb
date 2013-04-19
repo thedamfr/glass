@@ -1,3 +1,4 @@
+require 'glass/subscriptions/subscription.rb'
 module Glass
   LOCATION="location"
 
@@ -9,6 +10,16 @@ module Glass
       # The type of resource. This is always mirror#location.
       #
       attr_reader :kind
+
+      def subscribe(mirror, call_back_url, user_token)
+        s = Subscription.new()
+        s.mirror=mirror
+        s.callbackUrl=call_back_url
+        s.collection=Subscription::LOCATION
+        s.userToken=user_token
+        s.operation << UPDATE
+        s.insert
+      end
     end
 
     @@kind
@@ -47,7 +58,6 @@ module Glass
     #
     attr_accessor :address
     @address
-
 
 
   end
