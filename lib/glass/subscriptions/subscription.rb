@@ -8,6 +8,41 @@ module Glass
       # The type of resource. This is always mirror#subscription.
       #
       attr_accessor :kind
+
+      ##
+      # Subscribe to notifications for the current user.
+      #
+      # @param [Google::APIClient] client
+      #   Authorized client instance.
+      # @param [String] collection
+      #   Collection to subscribe to (supported values are "timeline" and "locations").
+      # @param [String] user_token
+      #   Opaque token used by the Glassware to identify the user the notification
+      #   pings are sent for (recommended).
+      # @param [String] verify_token
+      #   Opaque token used by the Glassware to verify that the notification pings are
+      #   sent by the API (optional).
+      # @param [String] callback_url
+      #   URL receiving notification pings (must be HTTPS).
+      # @param [Array] operation
+      #   List of operations to subscribe to. Valid values are "UPDATE", "INSERT" and
+      #   "DELETE" or nil to subscribe to all.
+      # @return nil
+      def subscribe_to_notification(mirror, collection, user_token, verify_token, callback_url, operation)
+        subscription = mirror.subscriptions.insert.request_schema.new({
+                                                                          'collection' => collection,
+                                                                          'userToken' => user_token,
+                                                                          'verifyToken' => verify_token,
+                                                                          'callbackUrl' => callback_url,
+                                                                          'operation' => operation})
+        result = client.execute(
+            :api_method => mirror.subscriptions.insert,
+            :body_object => subscription)
+        if result.error?
+          puts "An error occurred: #{result.data['error']['message']}"
+        end
+      end
+
     end
 
     @@kind = MIRROR+"#"+SUBSCRIPTION
