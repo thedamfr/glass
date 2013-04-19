@@ -235,6 +235,14 @@ module Glass
       return build_client(get_credentials(authorization_code))
     end
 
+    def insert(item)
+      item.insert(client)
+    end
+
+    def delete(item)
+      item.delete(client)
+    end
+
   end
 
 ##
