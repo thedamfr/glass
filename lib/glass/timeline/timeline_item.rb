@@ -7,7 +7,7 @@ module Glass
   #
   class TimelineItem
 
-    def initialize(client)
+    def initialize(client=nil)
       @client = client
     end
 
