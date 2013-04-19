@@ -2,13 +2,12 @@
 
 This Gem is meant to help you quickly building application for Google Glass thanks to Ruby.
 
-This is totally a beginning. Nothing is done.
+This gem is based on google/api-client.
 
-This gem is using google/api-client.
+Google/api-client is terrible to use. This gem aim to make it softer. 
+It offer a simple interface to the Mirror API and manage Auth, credentials and tokens for you.
 
-If you think google/api-client is b***s*** this gem is what you need.
-
-This gem is using Redis to store clients credentials.
+This gem is using Redis to store clients credentials and token.
 
 ## Installation
 
