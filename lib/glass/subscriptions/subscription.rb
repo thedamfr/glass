@@ -1,3 +1,4 @@
+require 'json'
 module Glass
   SUBSCRIPTION="subscription"
 
@@ -28,7 +29,7 @@ module Glass
       #   List of operations to subscribe to. Valid values are "UPDATE", "INSERT" and
       #   "DELETE" or nil to subscribe to all.
       # @return nil
-      def subscribe_to_notification(mirror, collection, user_token, verify_token, callback_url, operation)
+      def subscribe(mirror, collection, user_token, verify_token, callback_url, operation)
         subscription = mirror.subscriptions.insert.request_schema.new({
                                                                           'collection' => collection,
                                                                           'userToken' => user_token,
@@ -43,9 +44,34 @@ module Glass
         end
       end
 
+      ##
+      # Delete a subscription to a collection.
+      #
+      # @param [Google::APIClient] client
+      #   Authorized client instance.
+      # @param [String] collection
+      #   Collection to unsubscribe from (supported values are "timeline" and
+      #   "locations").
+      # @return nil
+      def unsubscribe_from_notifications(client, collection)
+        mirror = client.discovered_api('mirror', 'v1')
+        result = client.execute(
+            :api_method => mirror.subscriptions.delete,
+            :parameters => { 'id' => collection })
+        if result.error?
+          puts "An error occurred: #{result.data['error']['message']}"
+        end
+      end
+
     end
 
     @@kind = MIRROR+"#"+SUBSCRIPTION
+
+    ##
+    # The Mirror Api
+    #
+    attr_accessor :mirror
+    @mirror
 
     # The ID of the subscription.
     #
@@ -155,6 +181,38 @@ module Glass
         attr_accessor :payload
         @payload
 
+      end
+
+      ##
+      # Subscribe to notifications for the current user.
+      #
+      # @param [Google::APIClient] Mirror
+      #   Authorized client instance.
+      #
+      # @return nil
+      def insert(mirror=@mirror)
+        subscription = mirror.subscriptions.insert.request_schema.new(to_json)
+        result = client.execute(
+            :api_method => mirror.subscriptions.insert,
+            :body_object => subscription)
+        if result.error?
+          puts "An error occurred: #{result.data['error']['message']}"
+        end
+      end
+
+      ##
+      # Delete a subscription to a collection.
+      #
+      # @param [Google::APIClient] client
+      #   Authorized client instance.
+      # @return nil
+      def delete(mirror=@mirror)
+        result = client.execute(
+            :api_method => mirror.subscriptions.delete,
+            :parameters => { 'id' => collection })
+        if result.error?
+          puts "An error occurred: #{result.data['error']['message']}"
+        end
       end
 
     end
