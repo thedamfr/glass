@@ -44,17 +44,6 @@ And do the OAuth trick
 ```ruby
 ok_glass = Glass::Mirror.build_with_code(authorization_code)
 ```
-
-For now, other features and helpers are under development.
-
-But as you are a Glassware Explorer you can explore yourself. Access the google/api-client Client this way :
-```ruby
-ok_glass.client   # Get the discovered Google::API on wich you can make request
-```
-
-Have fun ! And please, show me any use. Just send me a tweet : @TheDamFr
-
-
 ### Token Persistence
 
 As in OAuth2.0, Google API issue a Refresh_Token the first time you Authorize the client, so you can get new token later.
@@ -71,6 +60,51 @@ For Heroku/RedisToGo users
 ```ruby
 Glass::Mirror.redis = ENV["REDISTOGO_URL"]
 ```
+
+
+## Overview
+
+### Timeline
+
+Let's say you want to tell "Hi" to the user.
+Build it and send it.
+
+```ruby
+item = Glass::TimelineItem.new()
+item.text="Hi"
+ok_glass.insert(item)
+```
+
+### Subscriptions
+
+Let's say you want to subscribe to location update.
+You need to provide a call_back_url, on wich Google will post the datas.
+
+```ruby
+subscription = Glass::Subscription.new()
+subscription.collection="location"
+subscription.call_back_url="https://glassware.herokuapp.com/location_update"
+ok_glass.insert(subscription)
+```
+
+### Location
+
+There is a quicker way to get Location update
+```ruby
+Glass::Location.subscribe(ok_glass,call_back_url)
+```
+
+
+
+## Going Further
+
+As you are a Glassware Explorer you can explore yourself. Access the google/api-client Client this way :
+```ruby
+ok_glass.client   # Get the discovered Google::API on wich you can make request
+```
+
+Have fun ! And please, show me any use. Just send me a tweet : @TheDamFr
+
 
 ### Bypassing Redis
 
