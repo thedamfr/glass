@@ -11,12 +11,11 @@ module Glass
       #
       attr_reader :kind
 
-      def subscribe(mirror, call_back_url, user_token)
+      def subscribe(mirror, call_back_url)
         s = Subscription.new()
         s.mirror=mirror
         s.callbackUrl=call_back_url
         s.collection=Subscription::LOCATION
-        s.userToken=user_token
         s.operation << UPDATE
         s.insert
       end
